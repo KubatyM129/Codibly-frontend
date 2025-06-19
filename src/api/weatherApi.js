@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Assumes frontend and backend run on the same host, backend on port 8000
-const BASE_URL = 'http://localhost:8000/api/weather';
+const BASE_URL = 'http://0.0.0.0:8000/api/weather';
 
 export const fetchWeatherData = async (latitude, longitude) => {
     try {
