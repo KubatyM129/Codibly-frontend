@@ -40,9 +40,16 @@ const App = () => {
     }, [darkMode]);
 
     const handleLocationSelect = (latlng) => {
-        setCoords(latlng);
+        setCoords({ lat: latlng.lat, lng: latlng.lng });
     };
 
+    useEffect(() => {
+        if (!coords) {
+            getLocation()
+                .then(loc => setCoords({ lat: loc.latitude, lng: loc.longitude }))
+                .catch(err => setError(err.message));
+        }
+    }, []);
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -71,7 +78,7 @@ const App = () => {
                 <h1>7-dniowa Prognoza Pogody</h1>
             </div>
             {weatherData && <WeatherTable data={weatherData} darkMode={darkMode} />}
-            {weatherData && <WeatherFooter darkMode={darkMode} data={weatherData} />}
+            {weatherData && <WeatherFooter coords={coords} />}
             <LocationPickerModal
                 show={showLocationModal}
                 onClose={() => setShowLocationModal(false)}

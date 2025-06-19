@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { fetchWeatherSummary } from '../api/weatherApi';
 
-const WeatherFooter = () => {
+const WeatherFooter = ({ coords }) => {
     const [weatherData, setWeatherData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     useEffect(() => {
         const getWeatherData = async () => {
+            setLoading(true);
+            setError(null);
             try {
-                const { latitude, longitude } = await getLocation();
+                let latitude, longitude;
+                if (coords) {
+                    latitude = coords.lat;
+                    longitude = coords.lng;
+                } else {
+                    const loc = await getLocation();
+                    latitude = loc.latitude;
+                    longitude = loc.longitude;
+                }
                 const data = await fetchWeatherSummary(latitude, longitude);
                 setWeatherData(data);
             } catch (err) {
@@ -19,7 +28,7 @@ const WeatherFooter = () => {
             }
         };
         getWeatherData();
-    }, []);
+    }, [coords]);
 
     const getLocation = () => {
         return new Promise((resolve, reject) => {
